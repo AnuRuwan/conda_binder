@@ -5,7 +5,7 @@ library(shiny)
 ui <- fluidPage(
     
     # Application title
-    titlePanel("Old Faithful Geyser Data"),
+    titlePanel("Linear Regression data"),
     
     
     
