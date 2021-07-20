@@ -62,7 +62,14 @@ ui <- fluidPage(
         mainPanel(
             plotOutput("distPlot"),
             plotOutput("linearplot"),
+            h5("Intercept"),
+            textOutput("Interceptoutput"),
+            h5("Slope"),
+            textOutput("slopeoutput"),
+            h5("Correlation_coefficient"),
+            tableOutput("correlation_coefficientoutput"),
             tableOutput("contents")
+            
         )
     )
 )
@@ -90,15 +97,35 @@ server <- function(input, output) {
     })
     
     observeEvent(input$go, {
+        dataset <- dataInput()
+        x <- dataset$x
+        y <- dataset$y
+        reg <- lm(y ~ x)
         output$linearplot <- renderPlot({
-            x <- dataInput()$x
-            y <- dataInput()$y
-                plot(x,y)
-                reg <- lm(y ~ x)
+            
+            plot(x,y)
+            
             abline(reg)
+            #print(reg)
+            
+            
         })
+        model_summary <- summary(reg)
+        #print(model_summary)
+        
+        intercept_value <- model_summary$coefficients[1,1] 
+        Slope_value <- model_summary$coefficients[2,1]
+        
+        #Intercept <- lm(x ~ y,dataset)
+        output$Interceptoutput <- renderText({intercept_value})
+        output$slopeoutput <- renderText({Slope_value})
+        
+        output$correlation_coefficientoutput <- renderTable(cor(dataset))
+        
+        
         
     })
+    
     
     output$contents <- renderTable({
         
@@ -121,4 +148,3 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-
