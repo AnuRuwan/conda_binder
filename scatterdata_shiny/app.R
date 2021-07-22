@@ -53,7 +53,7 @@ ui <- fluidPage(
                          selected = "head"),
             
             # adding an action button
-            actionButton("go", "Linear model"),
+            actionButton("go", "Linear model", style = "color:#FFFFFF;background-color:#009dff"),
         ),
         
         
@@ -62,13 +62,17 @@ ui <- fluidPage(
         mainPanel(
             plotOutput("distPlot"),
             plotOutput("linearplot"),
-            h5("Intercept"),
+            h5("Intercept",style="color:#009dff"),
             textOutput("Interceptoutput"),
-            h5("Slope"),
+            br(), #added a space
+            h5("Slope",style="color:#009dff"),
             textOutput("slopeoutput"),
-            h5("Correlation_coefficient"),
-            tableOutput("correlation_coefficientoutput"),
+            br(),
+            h5("Correlation_coefficient",style="color:#009dff"),
+            textOutput("correlation_coefficientoutput"),
+            br(),
             tableOutput("contents")
+           
             
         )
     )
@@ -107,9 +111,11 @@ server <- function(input, output) {
             
             abline(reg)
             #print(reg)
-            
-            
+        
         })
+        
+        corr <- cor(x,y)
+        
         model_summary <- summary(reg)
         #print(model_summary)
         
@@ -120,7 +126,7 @@ server <- function(input, output) {
         output$Interceptoutput <- renderText({intercept_value})
         output$slopeoutput <- renderText({Slope_value})
         
-        output$correlation_coefficientoutput <- renderTable(cor(dataset))
+        output$correlation_coefficientoutput <- renderText(corr)
         
         
         
